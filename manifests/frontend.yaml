@@ -1,4 +1,4 @@
-# frontend-manifest.yml
+lob/main/manifests/frontend.yaml# frontend-manifest.yml
 # --- 1. The Deployment ---
 # This tells Kubernetes how to run your application pods.
 apiVersion: apps/v1
@@ -25,7 +25,7 @@ spec:
       containers:
       - name: frontend-container
         # IMPORTANT: Replace this with the actual path to your image in GHCR
-        image: ghcr.io/tafy2392/presigned-url-upload-artifact:sha-55dce58
+        image: ghcr.io/tafy2392/presigned-url-upload-artifact:sha-1295c81
         ports:
         # The port your NGINX container is listening on
         - containerPort: 80
@@ -37,8 +37,10 @@ spec:
         # This injects the environment variable for the backend URL
         # In a real-world scenario, this should come from a ConfigMap or Secret.
         - name: BACKEND_API_URL
-          value: "http://presigned-url-upload-artifact-backend:3000" # <-- Replace with your actual backend URL
-
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-cm
+              key: BACKEND_API_URL
 ---
 # --- 2. The Service ---
 # This exposes your Deployment to the internet.
