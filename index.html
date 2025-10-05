@@ -3,23 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre-signed URL Upload</title>
+    <title>Secure File Upload</title>
+    
+    <!--
+      CRITICAL: This script block provides the configuration for your main script.
+      It contains placeholders that will be replaced by the entrypoint.sh script
+      when the Docker container starts. Your script.js will fail without this.
+    -->
+    <script>
+      window.APP_CONFIG = {
+        BACKEND_API_URL: "__BACKEND_API_URL__",
+        API_KEY: "__API_KEY__"
+      };
+    </script>
+    
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; }
-        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { margin-top: 0; }
-        input, button { font-size: 1rem; padding: 0.5rem; margin-top: 0.5rem; }
-        button { cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
-        #status { margin-top: 1rem; font-weight: bold; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .container { background: white; padding: 2rem 3rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 90%; }
+        h1 { margin-top: 0; color: #333; }
+        p { color: #666; }
+        input[type="file"] { margin-top: 1.5rem; }
+        button { font-size: 1rem; font-weight: 600; padding: 0.75rem 1.5rem; margin-top: 1.5rem; border-radius: 8px; border: none; cursor: pointer; background-color: #007bff; color: white; transition: background-color 0.2s ease; }
+        button:hover { background-color: #0056b3; }
+        #status { margin-top: 1.5rem; font-weight: bold; min-height: 1.2em; transition: color 0.3s ease; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Upload a File ☁️</h1>
+        <p>Select a file and click upload to securely send it to storage.</p>
+        
+        <!-- CRITICAL: The script uses these exact IDs to find the elements -->
         <input type="file" id="fileInput" />
+        <br>
         <button id="uploadButton">Upload File</button>
-        <div id="status">Please select a file to upload.</div>
+        <div id="status" id="status">Please select a file to upload.</div>
     </div>
-    <script src="index.js"></script>
+    
+    <!--
+      Your main application script is loaded last, after the body content exists.
+      This ensures the elements it needs to find are already created.
+    -->
+    <script src="script.js"></script>
 </body>
 </html>
