@@ -1,4 +1,3 @@
-lob/main/manifests/frontend.yaml# frontend-manifest.yml
 # --- 1. The Deployment ---
 # This tells Kubernetes how to run your application pods.
 apiVersion: apps/v1
