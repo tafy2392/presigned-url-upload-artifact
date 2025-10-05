@@ -29,6 +29,10 @@ spec:
         ports:
         # The port your NGINX container is listening on
         - containerPort: 80
+        envFrom:
+          # This loads all key-value pairs from the secret as environment variables
+        - secretRef:
+            name: backend-aws-secrets
         env:
         # This injects the environment variable for the backend URL
         # In a real-world scenario, this should come from a ConfigMap or Secret.
