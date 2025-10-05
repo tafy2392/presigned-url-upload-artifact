@@ -1,5 +1,4 @@
 # frontend-manifest.yml
-
 # --- 1. The Deployment ---
 # This tells Kubernetes how to run your application pods.
 apiVersion: apps/v1
@@ -7,6 +6,7 @@ kind: Deployment
 metadata:
   # The name of your deployment
   name: frontend-deployment
+  namespace: presigned-url-upload-artifact
   labels:
     app: frontend
 spec:
@@ -33,7 +33,7 @@ spec:
         # This injects the environment variable for the backend URL
         # In a real-world scenario, this should come from a ConfigMap or Secret.
         - name: BACKEND_API_URL
-          value: "http://presigned-url-upload-artifact" # <-- Replace with your actual backend URL
+          value: "http://presigned-url-upload-artifact-backend:3000" # <-- Replace with your actual backend URL
 
 ---
 
@@ -44,6 +44,7 @@ kind: Service
 metadata:
   # The name of your service
   name: frontend-service
+  namespace: presigned-url-upload-artifact
 spec:
   # Use a LoadBalancer to get an external IP address.
   # Note: This requests a cloud load balancer, which may incur costs

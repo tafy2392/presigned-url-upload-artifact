@@ -21,7 +21,7 @@ uploadButton.addEventListener('click', async () => {
         // --- STEP 1: Get the pre-signed URL from your backend ---
         // We send the filename and file type to the backend.
         // The backend will use this to generate the correct URL.
-        const response = await fetch('https://xxx.com/get-presigned-url', {
+        const response = await fetch('http://presigned-url-upload-artifact-backend:3000/get-presigned-url', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
