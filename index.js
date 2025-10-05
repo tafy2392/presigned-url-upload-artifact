@@ -1,25 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre-signed URL Upload</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; }
-        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { margin-top: 0; }
-        input, button { font-size: 1rem; padding: 0.5rem; margin-top: 0.5rem; }
-        button { cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
-        #status { margin-top: 1rem; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Upload a File ☁️</h1>
-        <input type="file" id="fileInput" />
-        <button id="uploadButton">Upload File</button>
-        <div id="status">Please select a file to upload.</div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+// --- Get references to the HTML elements ---
+const fileInput = document.getElementById('fileInput');
+const uploadButton = document.getElementById('uploadButton');
+const statusDiv = document.getElementById('status');
+
+// --- Add event listener to the upload button ---
+uploadButton.addEventListener('click', async () => {
+    const file = fileInput.files[0];
+
+    // 1. Basic validation: Make sure a file was selected
+    if (!file) {
+        statusDiv.textContent = '❌ Error: Please select a file first.';
+        statusDiv.style.color = 'red';
+        return;
+    }
+    
+    statusDiv.textContent = '⏳ Initializing upload...';
+    statusDiv.style.color = 'black';
+
+    try {
+        // --- STEP 1: Get the pre-signed URL from your backend ---
+        // We send the filename and file type to the backend.
+        // The backend will use this to generate the correct URL.
+        const response = await fetch('https://xxx.com/get-presigned-url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                filename: file.name,
+                contentType: file.type,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.statusText}`);
+        }
+        
+        // The backend should return the pre-signed URL in its response
+        const { uploadUrl } = await response.json();
+        console.log('Received pre-signed URL:', uploadUrl);
+        statusDiv.textContent = '⏳ Uploading file directly to storage...';
+
+        // --- STEP 2: Upload the actual file to the pre-signed URL ---
+        // This request goes directly to the cloud storage (e.g., S3), NOT your backend.
+        const uploadResponse = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: {
+                // The Content-Type header MUST match the one used to generate the URL
+                'Content-Type': file.type,
+            },
+            body: file, // The file object itself is the body
+        });
+
+        if (uploadResponse.ok) {
+            statusDiv.textContent = '✅ Success! File uploaded.';
+            statusDiv.style.color = 'green';
+        } else {
+            throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+        }
+
+    } catch (error) {
+        console.error('An error occurred:', error);
+        statusDiv.textContent = `❌ Error: ${error.message}`;
+        statusDiv.style.color = 'red';
+    }
+});
