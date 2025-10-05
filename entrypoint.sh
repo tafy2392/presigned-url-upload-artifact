@@ -1,5 +1,5 @@
 #!/bin/sh
-# This script is executed when the Docker container starts.
+# This script is executed when the Docker container starts
 
 # Define the path to the HTML file that needs configuration
 HTML_FILE="/usr/share/nginx/html/index.html"
