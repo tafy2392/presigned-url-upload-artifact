@@ -1,0 +1,58 @@
+# frontend-manifest.yml
+
+# --- 1. The Deployment ---
+# This tells Kubernetes how to run your application pods.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # The name of your deployment
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  # Run 2 replicas of your application for high availability
+  replicas: 1
+  selector:
+    # This selector links the Deployment to the Pods it manages
+    matchLabels:
+      app: frontend
+  template:
+    # This is the blueprint for the Pods
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        # IMPORTANT: Replace this with the actual path to your image in GHCR
+        image: ghcr.io/your-github-username/your-repo-name:latest
+        ports:
+        # The port your NGINX container is listening on
+        - containerPort: 80
+        env:
+        # This injects the environment variable for the backend URL
+        # In a real-world scenario, this should come from a ConfigMap or Secret.
+        - name: BACKEND_API_URL
+          value: "http://presigned-url-upload-artifact" # <-- Replace with your actual backend URL
+
+---
+
+# --- 2. The Service ---
+# This exposes your Deployment to the internet.
+apiVersion: v1
+kind: Service
+metadata:
+  # The name of your service
+  name: frontend-service
+spec:
+  # Use a LoadBalancer to get an external IP address.
+  # Note: This requests a cloud load balancer, which may incur costs
+  selector:
+    # This selector tells the Service to send traffic to Pods with the 'app: frontend' label
+    app: frontend
+  ports:
+  - protocol: TCP
+    # The port that the public will access
+    port: 80
+    # The port on the container to forward traffic to
+    targetPort: 80
