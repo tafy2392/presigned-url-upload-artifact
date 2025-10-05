@@ -24,7 +24,7 @@ spec:
       containers:
       - name: frontend-container
         # IMPORTANT: Replace this with the actual path to your image in GHCR
-        image: ghcr.io/tafy2392/presigned-url-upload-artifact:sha-1295c81
+        image: ghcr.io/tafy2392/presigned-url-upload-artifact:sha-f0bbfed
         ports:
         # The port your NGINX container is listening on
         - containerPort: 80
