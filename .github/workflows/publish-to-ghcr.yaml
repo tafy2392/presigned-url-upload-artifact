@@ -38,12 +38,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
+          flavor: |
+            latest=auto
+          tags: |
+            type=sha
           images: ${{ env.IMAGE_NAME }}
-          # This creates tags like:
-          # - 'latest' for the default branch
-          # - Git SHA (e.g., 1234567)
-          # - a tag for the git ref (e.g., 'main')
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
