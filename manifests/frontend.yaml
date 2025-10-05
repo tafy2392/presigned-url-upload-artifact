@@ -25,7 +25,7 @@ spec:
       containers:
       - name: frontend-container
         # IMPORTANT: Replace this with the actual path to your image in GHCR
-        image: ghcr.io/your-github-username/your-repo-name:latest
+        image: ghcr.io/tafy2392/presigned-url-upload-artifact:sha-7217c78
         ports:
         # The port your NGINX container is listening on
         - containerPort: 80
@@ -36,7 +36,6 @@ spec:
           value: "http://presigned-url-upload-artifact-backend:3000" # <-- Replace with your actual backend URL
 
 ---
-
 # --- 2. The Service ---
 # This exposes your Deployment to the internet.
 apiVersion: v1
